@@ -7,8 +7,8 @@ final class Profile: Model, Content, @unchecked Sendable {
     @ID(key: .id)
     var id: UUID?
 
-    @Field(key: .firebaseUserId)
-    var firebaseUserId: String
+    @Field(key: .authId)
+    var authId: String
 
     @Field(key: .email)
     var email: String
@@ -39,9 +39,9 @@ final class Profile: Model, Content, @unchecked Sendable {
 
     init() { }
 
-    init(id: UUID? = nil, firebaseUserId: String, email: String, name: String?, avatarUrl: String?, subscribedToNewsletterAt: Date? = nil) {
+    init(id: UUID? = nil, authId: String, email: String, name: String?, avatarUrl: String?, subscribedToNewsletterAt: Date? = nil) {
         self.id = id
-        self.firebaseUserId = firebaseUserId
+        self.authId = authId
         self.email = email
         self.name = name
         self.avatarUrl = avatarUrl

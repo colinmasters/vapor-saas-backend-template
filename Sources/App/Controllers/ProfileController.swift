@@ -7,9 +7,8 @@ typealias MailingListPortalSessionDTO = IndiePitcherSwift.MailingListPortalSessi
 extension Request {
     var profile: Profile {
         get async throws {
-
             let token = try await self.jwtUser
-            if let profile = try await Profile.query(on: self.db).filter(\.$firebaseUserId == token.userID).first() {
+            if let profile = try await Profile.query(on: self.db).filter(\.$authId == token.userID).first() {
                 
                 let avatarUrl = token.picture?.replacingOccurrences(of: "\\/", with: "")
                 
@@ -92,15 +91,15 @@ struct ProfileController: RouteCollection {
     func create(req: Request) async throws -> ProfileDTO {
         let token = try await req.jwtUser
         let avatarUrl = token.picture?.replacingOccurrences(of: "\\/", with: "")
-        if let profile = try await Profile.query(on: req.db).filter(\.$firebaseUserId == token.userID).first() {
+        if let profile = try await Profile.query(on: req.db).filter(\.$authId == token.userID).first() {
 
             guard let email = token.email else {
-                throw Abort(.badRequest, reason: "Firebase user does not have an email address.")
+                throw Abort(.badRequest, reason: "User does not have an email address.")
             }
 
             guard email == profile.email else {
                 // TODO: We don't currently support changing the email addresses of profiles.
-                throw Abort(.badRequest, reason: "Firebase user email does not match profile email.")
+                throw Abort(.badRequest, reason: "User email does not match profile email.")
             }
             
             if profile.name != token.name {
@@ -125,10 +124,10 @@ struct ProfileController: RouteCollection {
             return try profile.toDTO()
         } else {
             guard let email = token.email else {
-                throw Abort(.badRequest, reason: "Firebase user does not have an email address.")
+                throw Abort(.badRequest, reason: "User does not have an email address.")
             }
             
-            let profile = Profile(firebaseUserId: token.userID, email: email, name: token.name, avatarUrl: avatarUrl)
+            let profile = Profile(authId: token.userID, email: email, name: token.name, avatarUrl: avatarUrl)
             try await profile.save(on: req.db)
             
             let invites = try await OrganizationInvite.query(on: req.db).filter(\.$email == profile.email).with(\.$organization).all()

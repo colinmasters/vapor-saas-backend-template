@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Petr Pavlik on 11.03.2024.
-//
-
 import Fluent
 
 extension FieldKey {
@@ -14,7 +7,7 @@ extension FieldKey {
     static let apiKey: FieldKey = "api_key"
     static let email: FieldKey = "email"
     static let avatarUrl: FieldKey = "avatar_url"
-    static let firebaseUserId: FieldKey = "firebase_user_id"
+    static let authId: FieldKey = "auth_id" // Changed from firebaseUserId
     static let subscribedToNewsletterAt: FieldKey = "subscribed_to_newsletter_at"
     static let role: FieldKey = "role"
     static let profileId: FieldKey = "profile_id"

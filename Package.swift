@@ -1,4 +1,4 @@
-// swift-tools-version:6.0
+// swift-tools-version:5.9
 import PackageDescription
 
 let package = Package(
@@ -13,7 +13,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent.git", from: "4.8.0"),
         // 🐘 Fluent driver for Postgres.
         .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.7.2"),
-        .package(url: "https://github.com/vapor/jwt.git", from: "5.1.0"),
+        .package(url: "https://github.com/vapor/jwt-kit.git", from: "4.0.0"),
         .package(url: "https://github.com/Quick/Nimble.git", from: "13.0.0"),
         .package(url: "https://github.com/petrpavlik/swift-sentry.git", from: "1.0.0"),
         .package(url: "https://github.com/petrpavlik/MixpanelVapor.git", from: "1.0.0"),
@@ -26,7 +26,7 @@ let package = Package(
                 .product(name: "Fluent", package: "fluent"),
                 .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver"),
                 .product(name: "Vapor", package: "vapor"),
-                .product(name: "JWT", package: "jwt"),
+                .product(name: "JWTKit", package: "jwt-kit"),
                 .product(name: "SwiftSentry", package: "swift-sentry"),
                 "MixpanelVapor",
                 .product(name: "IndiePitcherSwift", package: "indiepitcher-swift"),
@@ -38,8 +38,7 @@ let package = Package(
             .product(name: "XCTVapor", package: "vapor"),
             .product(name: "Nimble", package: "Nimble"),
         ], swiftSettings: swiftSettings)
-    ],
-    swiftLanguageModes: [.v5]
+    ]
 )
 
 var swiftSettings: [SwiftSetting] { [

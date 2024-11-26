@@ -1,12 +1,5 @@
-//
-//  File.swift
-//  
-//
-//  Created by Petr Pavlik on 21.01.2024.
-//
-
 import Vapor
-import JWT
+@preconcurrency import JWT
 
 protocol JWTUser {
     var userID: String { get }
@@ -15,15 +8,40 @@ protocol JWTUser {
     var picture: String? { get }
 }
 
-extension FirebaseAuthIdentityToken : JWTUser {
+extension Application {
+    struct JWTKey: StorageKey {
+        typealias Value = JWTSigners
+    }
     
+    var jwt: JWTSigners {
+        get {
+            if let existing = storage[JWTKey.self] {
+                return existing
+            }
+            
+            let signers = JWTSigners()
+            if environment == .testing {
+                // For testing, use a simple secret
+                signers.use(.hs256(key: "test-secret"))
+            } else {
+                // In production, use your actual secret key
+                guard let secret = Environment.get("JWT_SECRET") else {
+                    fatalError("JWT_SECRET not set")
+                }
+                signers.use(.hs256(key: secret))
+            }
+            
+            storage[JWTKey.self] = signers
+            return signers
+        }
+        set {
+            storage[JWTKey.self] = newValue
+        }
+    }
 }
 
 extension Request {
-    var jwtUser: some JWTUser {
-        get async throws {
-            // This is where you can swap Firebase Auth for another JWT-based provider (Amazon Congnito, Clerk, ...)
-            try await jwt.firebaseAuth.verify()
-        }
+    var jwt: JWTSigners {
+        return application.jwt
     }
 }
