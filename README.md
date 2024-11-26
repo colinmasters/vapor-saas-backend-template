@@ -12,13 +12,20 @@ Every SAAS needs to handle user sign up, and if your service takes off, you'll s
 - **I'm working on a course explaining everything in in a very detailed way. [Join the waitlist](https://tally.so/r/wbdgqg).**
 
 ## Overview
-- **JWT-based user authentication using Firebase**
-  - Firebase provides a very generous offering of 50,000 monthly active users for free
-  - You can swap firebase for a different provider with little effort
+- **Flexible Authentication Support**
+  - Built-in support for two authentication providers:
+    1. **Firebase Authentication**
+       - Firebase provides a very generous offering of 50,000 monthly active users for free
+       - Perfect for production use with Firebase's robust authentication features
+    2. **JWT Authentication**
+       - Simple JWT-based authentication for development or custom auth implementations
+       - Useful for testing or when you want to implement your own auth system
+  - Easily swappable authentication providers through a protocol-based design
+  - Comprehensive test coverage for both authentication methods
 - **Grouping users into organisations with user roles**
   - Think GitHub or Figma organization you have for your company
 - **Using PostgreSQL as database**
-  - Swappable for a different database supported by Vapor’s ORM framework Fluent, I’d recommend sticking with PostgreSQL though
+  - Swappable for a different database supported by Vapor's ORM framework Fluent, I'd recommend sticking with PostgreSQL though
 - **Sending emails using [IndiePitcher](https://indiepitcher.com)**
   - Send automated emails such as "You've been added to RockerAI organization as an admin."
   - Can be swapped for Sendgrid, Resend, or another solution
@@ -31,10 +38,10 @@ Every SAAS needs to handle user sign up, and if your service takes off, you'll s
 - **All dockerized and deployable pretty much anywhere**
   - AWS, DigitalOcean, ...
 - **Tests for everything**
-  - Don’t worry about breaking the production, we have unit tests.
+  - Comprehensive test suite covering both authentication providers
+  - Test helpers for both Firebase and JWT authentication
+  - Don't worry about breaking the production, we have unit tests.
 
-
- 
 ## How to Use
 - Clone this repo to use it as a building block for your project
 - You'll need a postgre database. You can 
@@ -51,10 +58,25 @@ Every SAAS needs to handle user sign up, and if your service takes off, you'll s
   - `docker-compose down` to shut the databases down, or just kill the docker app
 - Running the project locally and running the unit tests should now work
 
+## Authentication Configuration
+The template supports two authentication providers out of the box:
 
+1. **Firebase Authentication (Default)**
+   - Set `FIREBASE_PROJECT_ID` in your `.env` file
+   - The app will automatically use Firebase authentication
+
+2. **JWT Authentication**
+   - For development or custom auth implementations
+   - Set `JWT_SECRET` in your `.env` file
+   - To switch to JWT auth, update the auth provider in your configuration:
+     ```swift
+     // In configure.swift
+     app.authProvider = VaporAuthProvider(signers: app.jwt)
+     ```
+
+Both providers are fully tested and can be easily swapped through the `AuthProvider` protocol.
 
 ## Deployment
 You can deploy your backend anywhere that supports Docker. An obvious choice for many people would be AWS, I'm personally a fan of [Digital Ocean's App Platform](https://m.do.co/c/9e21fc78af92). 
 
 I'd also encourage you to join the [vapor discord](https://discord.gg/vapor). Feel free to DM me there.
-
